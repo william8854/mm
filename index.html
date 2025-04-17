@@ -1,0 +1,147 @@
+
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Zieltracker 2025</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 2rem;
+      max-width: 900px;
+      margin: auto;
+    }
+    h1 { text-align: center; }
+    .form, .category {
+      margin-top: 2rem;
+    }
+    .form input, .form select, .form button {
+      padding: 0.5rem;
+      margin-right: 0.5rem;
+      font-size: 1rem;
+    }
+    .goal {
+      margin: 0.5rem 0;
+      cursor: pointer;
+    }
+    .done {
+      text-decoration: line-through;
+      color: gray;
+    }
+    progress {
+      width: 100%;
+      height: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎯 Zieltracker 2025</h1>
+
+  <div>
+    <label><strong>🚀 Gesamtfortschritt: <span id="overall">0</span>%</strong></label>
+    <progress id="overallProgress" value="0" max="100"></progress>
+  </div>
+
+  <div class="form">
+    <input id="goalInput" placeholder="Neues Ziel eingeben..." />
+    <select id="categorySelect">
+      <option>Unternehmertum</option>
+      <option>Mindset</option>
+      <option>Börse</option>
+    </select>
+    <button onclick="addGoal()">➕ Hinzufügen</button>
+  </div>
+
+  <div id="categories"></div>
+
+  <script>
+    const categories = ["Unternehmertum", "Mindset", "Börse"];
+    const predefinedGoals = [
+      { title: "Persönliche Standortbestimmung", category: "Unternehmertum" },
+      { title: "Ideenfindung + Businessmodelle", category: "Unternehmertum" },
+      { title: "Kontaktaufnahme mit Jens Rabe", category: "Unternehmertum" },
+      { title: "Recherche bestehende Firmen", category: "Unternehmertum" },
+      { title: "Definition der Geschäftsidee", category: "Unternehmertum" },
+      { title: "Wissensmonetarisierung aufbauen", category: "Unternehmertum" },
+      
+      { title: "Noch 2.5 Bücher lesen bis 4. Juli", category: "Mindset" },
+      { title: "Viel Lesezeit: 11.–22. Mai", category: "Mindset" },
+      { title: "Wenig Lesezeit: 26. Mai – 3. Juni", category: "Mindset" },
+      { title: "Keine Lesezeit: 26. Juni – 6. Juli", category: "Mindset" },
+
+      { title: "Handelsplan neu schreiben", category: "Börse" },
+      { title: "Externe Rückmeldung Handelsplan", category: "Börse" },
+      { title: "Technisches Setup A-/B-Portfolio", category: "Börse" },
+      { title: "Recherche ETFs und Aktien A-Portfolio", category: "Börse" },
+      { title: "Fahrplan Kapitalverteilung", category: "Börse" },
+      { title: "Kapital auf A-/B-Portfolio übertragen", category: "Börse" },
+      { title: "Maklerkontakt + Zeitplan Wohnung", category: "Börse" },
+      { title: "Verkaufsberater-Entscheid Wohnung", category: "Börse" }
+    ];
+
+    let goals = JSON.parse(localStorage.getItem("goals2025") || "[]");
+    if (goals.length === 0) {
+      goals = predefinedGoals.map((g, i) => ({ id: i + 1, ...g, done: false }));
+    }
+
+    const goalInput = document.getElementById("goalInput");
+    const categorySelect = document.getElementById("categorySelect");
+    const overallSpan = document.getElementById("overall");
+    const overallProgress = document.getElementById("overallProgress");
+    const container = document.getElementById("categories");
+
+    function addGoal() {
+      const title = goalInput.value.trim();
+      const category = categorySelect.value;
+      if (!title) return;
+      goals.push({ id: Date.now(), title, category, done: false });
+      goalInput.value = "";
+      saveAndRender();
+    }
+
+    function toggleGoal(id) {
+      goals = goals.map(g => g.id === id ? { ...g, done: !g.done } : g);
+      saveAndRender();
+    }
+
+    function saveAndRender() {
+      localStorage.setItem("goals2025", JSON.stringify(goals));
+      render();
+    }
+
+    function getProgress(cat) {
+      const catGoals = goals.filter(g => g.category === cat);
+      if (catGoals.length === 0) return 0;
+      const done = catGoals.filter(g => g.done).length;
+      return Math.round((done / catGoals.length) * 100);
+    }
+
+    function render() {
+      container.innerHTML = "";
+      let total = 0;
+      categories.forEach(cat => {
+        const catGoals = goals.filter(g => g.category === cat);
+        const catDiv = document.createElement("div");
+        catDiv.className = "category";
+        const progress = getProgress(cat);
+        total += progress;
+        catDiv.innerHTML = `<h2>📂 ${cat} (${progress}%)</h2><progress value="${progress}" max="100"></progress>`;
+        catGoals.forEach(g => {
+          const div = document.createElement("div");
+          div.className = "goal" + (g.done ? " done" : "");
+          div.textContent = (g.done ? "✅ " : "⬜️ ") + g.title;
+          div.onclick = () => toggleGoal(g.id);
+          catDiv.appendChild(div);
+        });
+        container.appendChild(catDiv);
+      });
+      const overall = Math.round(total / categories.length);
+      overallSpan.textContent = overall;
+      overallProgress.value = overall;
+    }
+
+    render();
+  </script>
+</body>
+</html>

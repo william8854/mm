@@ -22,10 +22,49 @@
     }
 
     function loadData() {
-      const data = JSON.parse(localStorage.getItem('zieltrackerData'));
-      if (!data) return;
-      Object.keys(data).forEach(goalId => {
-        const container = document.querySelector(`#${goalId} .subtasks`);
+  const data = JSON.parse(localStorage.getItem('zieltrackerData'));
+  if (!data) {
+    const defaultData = {
+      'goal-unternehmertum': [
+        { text: 'Persönliche Standortbestimmung', checked: false, date: '' },
+        { text: 'Ideenfindung + Businessmodelle', checked: false, date: '' },
+        { text: 'Kontaktaufnahme mit Jens Rabe', checked: false, date: '' },
+        { text: 'Recherche: Bestehende Firmen', checked: false, date: '' },
+        { text: 'Definition der Geschäftsidee', checked: false, date: '' },
+        { text: 'Wissens-Monetarisierung', checked: false, date: '' }
+      ],
+      'goal-mindset': [
+        { text: '2.5 Bücher lesen', checked: false, date: '' },
+        { text: 'Viel Lesezeit: 11.–22. Mai', checked: false, date: '' },
+        { text: 'Wenig Lesezeit: 26. Mai – 3. Juni', checked: false, date: '' },
+        { text: 'Keine Lesezeit: 26. Juni – 6. Juli', checked: false, date: '' }
+      ],
+      'goal-boerse': [
+        { text: 'Handelsplan neu schreiben', checked: false, date: '' },
+        { text: 'Externes Feedback einholen', checked: false, date: '' },
+        { text: 'Technisches Setup A-/B-Portfolio', checked: false, date: '' },
+        { text: 'Fahrplan Kapitalverteilung', checked: false, date: '' },
+        { text: 'Kapital transferieren', checked: false, date: '' },
+        { text: 'Maklerkontakt + Besichtigung', checked: false, date: '' },
+        { text: 'Maklerentscheid / Verkaufsberater', checked: false, date: '' }
+      ]
+    };
+    localStorage.setItem('zieltrackerData', JSON.stringify(defaultData));
+    loadData();
+    return;
+  }
+  Object.keys(data).forEach(goalId => {
+    const container = document.querySelector(`#${goalId} .subtasks`);
+    container.innerHTML = '';
+    data[goalId].forEach(subtask => {
+      const div = document.createElement("div");
+      div.className = "subtask";
+      div.innerHTML = `<input type="checkbox" onchange="updateProgress(); saveData();" ${subtask.checked ? 'checked' : ''}><label>${subtask.text}</label><span class="edit-btn" onclick="editSubtask(this)">🖊️</span><span class="delete-btn" onclick="deleteSubtask(this)">🗑️</span><span class="due-date">${subtask.date}</span>`;
+      container.appendChild(div);
+    });
+    sortSubtasks(container);
+  });
+} .subtasks`);
         container.innerHTML = '';
         data[goalId].forEach(subtask => {
           const div = document.createElement("div");

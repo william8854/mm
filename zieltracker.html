@@ -49,6 +49,20 @@
       input.focus();
     }
 
+    function addSubtask(goalId) {
+      const input = document.querySelector(`#${goalId} .new-subtask-input`);
+      const value = input.value.trim();
+      if (value === "") return;
+
+      const container = document.querySelector(`#${goalId} .subtasks`);
+      const div = document.createElement("div");
+      div.className = "subtask";
+      div.innerHTML = `<input type="checkbox" onchange="updateProgress()"><label>${value}</label><span class="edit-btn" onclick="editSubtask(this)">🖊️</span>`;
+      container.appendChild(div);
+      input.value = "";
+      updateProgress();
+    }
+
     window.onload = updateProgress;
   </script>
   <style>
@@ -99,40 +113,68 @@
       margin-left: 0.5rem;
       flex-grow: 1;
     }
+    .add-subtask {
+      margin-left: 1rem;
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+    .add-subtask input {
+      flex-grow: 1;
+      padding: 0.3rem;
+    }
   </style>
 </head>
 <body>
   <h1>🎯 Willi's Zieltracker</h1>
 
-  <div class="goal">
+  <div class="goal" id="goal-unternehmertum">
     <h2>Unternehmertum</h2>
-    <div class="subtask"><input type="checkbox" onchange="updateProgress()"><label>Persönliche Standortbestimmung</label><span class="edit-btn" onclick="editSubtask(this)">🖊️</span></div>
-    <div class="subtask"><input type="checkbox" onchange="updateProgress()"><label>Ideenfindung + Businessmodelle</label><span class="edit-btn" onclick="editSubtask(this)">🖊️</span></div>
-    <div class="subtask"><input type="checkbox" onchange="updateProgress()"><label>Kontaktaufnahme mit Jens Rabe</label><span class="edit-btn" onclick="editSubtask(this)">🖊️</span></div>
-    <div class="subtask"><input type="checkbox" onchange="updateProgress()"><label>Recherche: Bestehende Firmen</label><span class="edit-btn" onclick="editSubtask(this)">🖊️</span></div>
-    <div class="subtask"><input type="checkbox" onchange="updateProgress()"><label>Definition der Geschäftsidee</label><span class="edit-btn" onclick="editSubtask(this)">🖊️</span></div>
-    <div class="subtask"><input type="checkbox" onchange="updateProgress()"><label>Wissens-Monetarisierung</label><span class="edit-btn" onclick="editSubtask(this)">🖊️</span></div>
+    <div class="subtasks">
+      <div class="subtask"><input type="checkbox" onchange="updateProgress()"><label>Persönliche Standortbestimmung</label><span class="edit-btn" onclick="editSubtask(this)">🖊️</span></div>
+      <div class="subtask"><input type="checkbox" onchange="updateProgress()"><label>Ideenfindung + Businessmodelle</label><span class="edit-btn" onclick="editSubtask(this)">🖊️</span></div>
+      <div class="subtask"><input type="checkbox" onchange="updateProgress()"><label>Kontaktaufnahme mit Jens Rabe</label><span class="edit-btn" onclick="editSubtask(this)">🖊️</span></div>
+      <div class="subtask"><input type="checkbox" onchange="updateProgress()"><label>Recherche: Bestehende Firmen</label><span class="edit-btn" onclick="editSubtask(this)">🖊️</span></div>
+      <div class="subtask"><input type="checkbox" onchange="updateProgress()"><label>Definition der Geschäftsidee</label><span class="edit-btn" onclick="editSubtask(this)">🖊️</span></div>
+      <div class="subtask"><input type="checkbox" onchange="updateProgress()"><label>Wissens-Monetarisierung</label><span class="edit-btn" onclick="editSubtask(this)">🖊️</span></div>
+    </div>
+    <div class="add-subtask">
+      <input class="new-subtask-input" type="text" placeholder="Neues Unterziel...">
+      <button onclick="addSubtask('goal-unternehmertum')">➕ Hinzufügen</button>
+    </div>
     <div class="progress-bar"><div class="progress"><span class="percent"></span></div></div>
   </div>
 
-  <div class="goal">
+  <div class="goal" id="goal-mindset">
     <h2>Mindset (Bücher)</h2>
-    <div class="subtask"><input type="checkbox" onchange="updateProgress()"><label>2.5 Bücher lesen</label><span class="edit-btn" onclick="editSubtask(this)">🖊️</span></div>
-    <div class="subtask"><input type="checkbox" onchange="updateProgress()"><label>Viel Lesezeit: 11.–22. Mai</label><span class="edit-btn" onclick="editSubtask(this)">🖊️</span></div>
-    <div class="subtask"><input type="checkbox" onchange="updateProgress()"><label>Wenig Lesezeit: 26. Mai – 3. Juni</label><span class="edit-btn" onclick="editSubtask(this)">🖊️</span></div>
-    <div class="subtask"><input type="checkbox" onchange="updateProgress()"><label>Keine Lesezeit: 26. Juni – 6. Juli</label><span class="edit-btn" onclick="editSubtask(this)">🖊️</span></div>
+    <div class="subtasks">
+      <div class="subtask"><input type="checkbox" onchange="updateProgress()"><label>2.5 Bücher lesen</label><span class="edit-btn" onclick="editSubtask(this)">🖊️</span></div>
+      <div class="subtask"><input type="checkbox" onchange="updateProgress()"><label>Viel Lesezeit: 11.–22. Mai</label><span class="edit-btn" onclick="editSubtask(this)">🖊️</span></div>
+      <div class="subtask"><input type="checkbox" onchange="updateProgress()"><label>Wenig Lesezeit: 26. Mai – 3. Juni</label><span class="edit-btn" onclick="editSubtask(this)">🖊️</span></div>
+      <div class="subtask"><input type="checkbox" onchange="updateProgress()"><label>Keine Lesezeit: 26. Juni – 6. Juli</label><span class="edit-btn" onclick="editSubtask(this)">🖊️</span></div>
+    </div>
+    <div class="add-subtask">
+      <input class="new-subtask-input" type="text" placeholder="Neues Unterziel...">
+      <button onclick="addSubtask('goal-mindset')">➕ Hinzufügen</button>
+    </div>
     <div class="progress-bar"><div class="progress"><span class="percent"></span></div></div>
   </div>
 
-  <div class="goal">
+  <div class="goal" id="goal-boerse">
     <h2>Börse</h2>
-    <div class="subtask"><input type="checkbox" onchange="updateProgress()"><label>Handelsplan neu schreiben</label><span class="edit-btn" onclick="editSubtask(this)">🖊️</span></div>
-    <div class="subtask"><input type="checkbox" onchange="updateProgress()"><label>Externes Feedback einholen</label><span class="edit-btn" onclick="editSubtask(this)">🖊️</span></div>
-    <div class="subtask"><input type="checkbox" onchange="updateProgress()"><label>Technisches Setup A-/B-Portfolio</label><span class="edit-btn" onclick="editSubtask(this)">🖊️</span></div>
-    <div class="subtask"><input type="checkbox" onchange="updateProgress()"><label>Fahrplan Kapitalverteilung</label><span class="edit-btn" onclick="editSubtask(this)">🖊️</span></div>
-    <div class="subtask"><input type="checkbox" onchange="updateProgress()"><label>Kapital transferieren</label><span class="edit-btn" onclick="editSubtask(this)">🖊️</span></div>
-    <div class="subtask"><input type="checkbox" onchange="updateProgress()"><label>Maklerkontakt + Besichtigung</label><span class="edit-btn" onclick="editSubtask(this)">🖊️</span></div>
-    <div class="subtask"><input type="checkbox" onchange="updateProgress()"><label>Maklerentscheid / Verkaufsberater</label><span class="edit-btn" onclick="editSubtask(this)">🖊️</span></div>
+    <div class="subtasks">
+      <div class="subtask"><input type="checkbox" onchange="updateProgress()"><label>Handelsplan neu schreiben</label><span class="edit-btn" onclick="editSubtask(this)">🖊️</span></div>
+      <div class="subtask"><input type="checkbox" onchange="updateProgress()"><label>Externes Feedback einholen</label><span class="edit-btn" onclick="editSubtask(this)">🖊️</span></div>
+      <div class="subtask"><input type="checkbox" onchange="updateProgress()"><label>Technisches Setup A-/B-Portfolio</label><span class="edit-btn" onclick="editSubtask(this)">🖊️</span></div>
+      <div class="subtask"><input type="checkbox" onchange="updateProgress()"><label>Fahrplan Kapitalverteilung</label><span class="edit-btn" onclick="editSubtask(this)">🖊️</span></div>
+      <div class="subtask"><input type="checkbox" onchange="updateProgress()"><label>Kapital transferieren</label><span class="edit-btn" onclick="editSubtask(this)">🖊️</span></div>
+      <div class="subtask"><input type="checkbox" onchange="updateProgress()"><label>Maklerkontakt + Besichtigung</label><span class="edit-btn" onclick="editSubtask(this)">🖊️</span></div>
+      <div class="subtask"><input type="checkbox" onchange="updateProgress()"><label>Maklerentscheid / Verkaufsberater</label><span class="edit-btn" onclick="editSubtask(this)">🖊️</span></div>
+    </div>
+    <div class="add-subtask">
+      <input class="new-subtask-input" type="text" placeholder="Neues Unterziel...">
+      <button onclick="addSubtask('goal-boerse')">➕ Hinzufügen</button>
+    </div>
     <div class="progress-bar"><div class="progress"><span class="percent"></span></div></div>
   </div>
 

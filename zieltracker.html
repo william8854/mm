@@ -165,5 +165,12 @@
 
 <h2>🔁 Gesamtfortschritt</h2>
 <div class="progress-bar"><div id="overall-progress" class="progress"><span id="overall-percent"></span></div></div>
+<script>
+  window.onload = () => {
+    loadData();
+    updateProgress();
+    document.querySelectorAll('.subtasks').forEach(container => sortSubtasks(container));
+  };
+</script>
 </body>
 </html>

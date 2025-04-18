@@ -91,6 +91,132 @@
 </head>
 <body>
   <h1>📅 Willi's Erfolgsziele-Tracker 2025</h1>
-  <!-- bestehender Body-Inhalt unverändert -->
+  <div class="goal" id="goal-unternehmertum">
+    <h2>Unternehmertum</h2>
+    <div class="subtasks"></div>
+    <div class="add-subtask">
+      <input class="new-subtask-input" type="text" placeholder="Neues Unterziel...">
+      <input class="new-subtask-date" type="date">
+      <button onclick="addSubtask('goal-unternehmertum')">➕ Hinzufügen</button>
+    </div>
+    <div class="progress-bar"><div class="progress"><span class="percent"></span></div></div>
+  </div>
+
+  <div class="goal" id="goal-mindset">
+    <h2>Mindset (Bücher)</h2>
+    <div class="subtasks"></div>
+    <div class="add-subtask">
+      <input class="new-subtask-input" type="text" placeholder="Neues Unterziel...">
+      <input class="new-subtask-date" type="date">
+      <button onclick="addSubtask('goal-mindset')">➕ Hinzufügen</button>
+    </div>
+    <div class="progress-bar"><div class="progress"><span class="percent"></span></div></div>
+  </div>
+
+  <div class="goal" id="goal-boerse">
+    <h2>Börse</h2>
+    <div class="subtasks"></div>
+    <div class="add-subtask">
+      <input class="new-subtask-input" type="text" placeholder="Neues Unterziel...">
+      <input class="new-subtask-date" type="date">
+      <button onclick="addSubtask('goal-boerse')">➕ Hinzufügen</button>
+    </div>
+    <div class="progress-bar"><div class="progress"><span class="percent"></span></div></div>
+  </div>
+
+  <h2>🔁 Gesamtfortschritt</h2>
+  <div class="progress-bar"><div id="overall-progress" class="progress"><span id="overall-percent"></span></div></div>
+
+  <script>
+    function addSubtask(goalId) {
+      const input = document.querySelector(`#${goalId} .new-subtask-input`);
+      const dateInput = document.querySelector(`#${goalId} .new-subtask-date`);
+      const value = input.value.trim();
+      const dateValue = dateInput.value;
+      if (value === "") return;
+
+      const container = document.querySelector(`#${goalId} .subtasks`);
+
+      const div = document.createElement("div");
+      div.className = "subtask";
+      div.innerHTML = `<input type="checkbox" onchange="updateProgress(); saveData();"><label>${value}</label><span class="edit-btn" onclick="editSubtask(this)">🖊️</span><span class="delete-btn" onclick="deleteSubtask(this)">🗑️</span><span class="due-date">${dateValue}</span>`;
+      container.appendChild(div);
+      sortSubtasks(container);
+
+      input.value = "";
+      dateInput.value = "";
+      updateProgress();
+      saveData();
+    }
+
+    function sortSubtasks(container) {
+      const subtasks = Array.from(container.querySelectorAll(".subtask"));
+      subtasks.sort((a, b) => {
+        const textA = a.querySelector("label").textContent.toLowerCase();
+        const textB = b.querySelector("label").textContent.toLowerCase();
+        return textA.localeCompare(textB);
+      });
+      subtasks.forEach(subtask => container.appendChild(subtask));
+    }
+
+    function deleteSubtask(button) {
+      const subtask = button.closest(".subtask");
+      subtask.remove();
+      updateProgress();
+      saveData();
+    }
+
+    function editSubtask(button) {
+      const subtask = button.closest(".subtask");
+      const label = subtask.querySelector("label");
+      const dateSpan = subtask.querySelector(".due-date");
+      const originalText = label.textContent;
+      const originalDate = dateSpan ? dateSpan.textContent : "";
+
+      const textInput = document.createElement("input");
+      textInput.type = "text";
+      textInput.value = originalText;
+      textInput.className = "edit-input";
+
+      const dateInput = document.createElement("input");
+      dateInput.type = "date";
+      dateInput.className = "edit-input";
+      if (originalDate) {
+        dateInput.value = originalDate;
+      }
+
+      textInput.onkeydown = function(e) {
+        if (e.key === "Enter") {
+          label.textContent = textInput.value;
+          if (dateSpan) {
+            dateSpan.textContent = dateInput.value;
+          } else {
+            const newDateSpan = document.createElement("span");
+            newDateSpan.className = "due-date";
+            newDateSpan.textContent = dateInput.value;
+            subtask.appendChild(newDateSpan);
+          }
+          subtask.removeChild(textInput);
+          subtask.removeChild(dateInput);
+          label.style.display = "inline";
+          button.style.display = "inline";
+          updateProgress();
+          saveData();
+        }
+      };
+
+      label.style.display = "none";
+      button.style.display = "none";
+      subtask.insertBefore(textInput, label);
+      subtask.insertBefore(dateInput, label);
+      textInput.focus();
+    }
+
+    window.onload = () => {
+      loadData();
+      updateProgress();
+      document.querySelectorAll('.subtasks').forEach(container => sortSubtasks(container));
+    }
+  </script>
 </body>
 </html>
